@@ -1,1 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathematical Foundation — Casino Probability Simulator</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
+<nav class="navbar">
+  <div class="nav-logo"><span>♠</span> Casino Prob. Simulator</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="theory.html">Theory</a></li>
+    <li><a href="simulator.html">Simulator</a></li>
+    <li><a href="montecarlo.html">Monte Carlo</a></li>
+    <li><a href="analysis.html">Analysis</a></li>
+    <li><a href="fallacy.html">Fallacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+
+  <div class="section text-center fade-in">
+    <div class="tag">Chapter I</div>
+    <h1>Mathematical <span class="text-gold">Foundation</span></h1>
+    <p class="hero-subtitle">
+      Formal probability models, expected value theory, variance analysis,
+      and the complete mathematical architecture of casino games.
+    </p>
+  </div>
+
+  <!-- §1 Probability Model -->
+  <section class="section-sm fade-in">
+    <div class="tag">§1 — Probability Model</div>
+    <h2>European Roulette Sample Space</h2>
+    <p>
+      European roulette defines a discrete probability space (Ω, F, P) where the sample space Ω
+      consists of 37 equally probable elementary events — the integers {0, 1, 2, …, 36}.
+      Each outcome has probability P({n}) = 1/37.
+    </p>
+    <div class="grid-3 mt-3 mb-3">
+      <div class="stat-card">
+        <div class="stat-label">Total Outcomes</div>
+        <div class="stat-value">37</div>
+        <p class="stat-desc">Ω = {0, 1, 2, … , 36}<br/>Uniform distribution</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">P(Red)</div>
+        <div class="stat-value" style="color:#ef4444;">18/37</div>
+        <p class="stat-desc">≈ 48.6486…%<br/>18 red numbers</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">P(Black)</div>
+        <div class="stat-value" style="color:#94a3b8;">18/37</div>
+        <p class="stat-desc">≈ 48.6486…%<br/>18 black numbers</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">P(Green / Zero)</div>
+        <div class="stat-value" style="color:#22c55e;">1/37</div>
+        <p class="stat-desc">≈ 2.7027…%<br/>The house's mechanism</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">P(Single Number)</div>
+        <div class="stat-value">1/37</div>
+        <p class="stat-desc">Pays 35:1 on win<br/>Straight bet</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Check: Σ P(Ω)</div>
+        <div class="stat-value text-green">1.000</div>
+        <p class="stat-desc">18/37 + 18/37 + 1/37<br/>= 37/37 = 1 ✓</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="formula-label">Red Numbers (18 total)</div>
+      <div class="formula-block" style="font-size:0.85rem;">
+        R = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
+      </div>
+      <div class="formula-label">Black Numbers (18 total)</div>
+      <div class="formula-block" style="font-size:0.85rem;">
+        B = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35}
+      </div>
+      <div class="formula-label">Green (1 number)</div>
+      <div class="formula-block" style="font-size:0.85rem;">G = {0}</div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- §2 Expected Value -->
+  <section class="section-sm fade-in">
+    <div class="tag">§2 — Expected Value</div>
+    <h2>The Expected Value Formula</h2>
+    <p>
+      The <strong>expected value</strong> (EV) of a random variable X is the probability-weighted
+      average of all possible outcomes.
+    </p>
+    <div class="formula-block">
+      <div class="formula-label">General Definition</div>
+      E[X] = Σᵢ P(xᵢ) · xᵢ
+    </div>
+    <p>For a $1 bet on red in European roulette:</p>
+    <div class="formula-block">
+      <div class="formula-label">Red Bet EV Derivation</div>
+      E[X] = (18/37)(+1) + (19/37)(−1) = 18/37 − 19/37 = −1/37 ≈ −$0.02703
+    </div>
+    <p>For a $1 straight-up number bet (pays 35:1):</p>
+    <div class="formula-block">
+      <div class="formula-label">Single Number Bet EV</div>
+      E[X] = (1/37)(+35) + (36/37)(−1) = 35/37 − 36/37 = −1/37 ≈ −$0.02703
+    </div>
+    <div class="card" style="border-left:4px solid var(--gold); margin-top:1.5rem;">
+      <h3>Key Insight</h3>
+      <p class="mt-1">
+        Every bet in European roulette — regardless of type — has the <em>same</em> expected value
+        of −1/37 per unit wagered. The house edge of <strong>2.703%</strong> is invariant.
+        The green zero creates an asymmetry that no combination of bets can neutralize.
+      </p>
+    </div>
+  </section>
+
+  <!-- EV Interactive Calculator -->
+  <section class="section-sm fade-in">
+    <div class="tag">Interactive Tool</div>
+    <h2>Expected Value Calculator</h2>
+    <p>Compute expected value, house edge, and full statistical profile for any bet configuration.</p>
+
+    <div class="grid-2 mt-3" style="gap:2rem; align-items:start;">
+      <div class="card">
+        <h3 class="mb-2">Bet Parameters</h3>
+        <div style="display:flex; flex-direction:column; gap:1.25rem;">
+          <div class="input-group">
+            <label>Bet Size ($)</label>
+            <input type="number" id="ev-bet" value="10" min="0.01" step="0.01" />
+          </div>
+          <div class="input-group">
+            <label>Win Probability (0 – 1)</label>
+            <input type="number" id="ev-prob" value="0.48649" min="0" max="1" step="0.00001" />
+            <small class="text-muted mono" style="font-size:0.72rem;">18/37 = 0.48649 (red/black)</small>
+          </div>
+          <div class="input-group">
+            <label>Net Payout Multiplier</label>
+            <input type="number" id="ev-payout" value="1" min="0.01" step="0.01" />
+            <small class="text-muted mono" style="font-size:0.72rem;">1 = even money · 35 = straight up</small>
+          </div>
+          <button id="ev-calc-btn" class="btn btn-gold full-width">Calculate Expected Value</button>
+        </div>
+        <div class="formula-block mt-3" id="ev-formula" style="font-size:0.88rem;">
+          EV = P(win)×(payout×bet) − P(lose)×bet
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="result-box">
+          <div class="formula-label">Expected Value per Bet</div>
+          <div class="result-value neutral" id="ev-result">—</div>
+          <div id="ev-badge" class="mt-1"></div>
+        </div>
+        <div class="grid-2" style="gap:1rem;">
+          <div class="result-box">
+            <div class="formula-label">House Edge</div>
+            <div class="result-value neutral" id="ev-edge">—</div>
+          </div>
+          <div class="result-box">
+            <div class="formula-label">P&amp;L over 100 bets</div>
+            <div class="result-value negative" id="ev-loss100">—</div>
+          </div>
+          <div class="result-box">
+            <div class="formula-label">Variance (σ²)</div>
+            <div class="result-value neutral" id="ev-variance">—</div>
+          </div>
+          <div class="result-box">
+            <div class="formula-label">Std Deviation (σ)</div>
+            <div class="result-value neutral" id="ev-stddev">—</div>
+          </div>
+        </div>
+        <div class="card mt-1" id="ev-interpretation" style="min-height:80px;">
+          <p class="text-muted italic" style="font-size:0.95rem;">Enter values and click Calculate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- §3 Variance -->
+  <section class="section-sm fade-in">
+    <div class="tag">§3 — Variance &amp; Standard Deviation</div>
+    <h2>Measuring Uncertainty</h2>
+    <p>
+      While expected value gives the <em>center</em> of a distribution, variance describes
+      how far outcomes spread around that center.
+    </p>
+    <div class="formula-block">
+      <div class="formula-label">Variance Definition</div>
+      Var(X) = E[(X − μ)²] = Σᵢ P(xᵢ) · (xᵢ − μ)²
+    </div>
+    <div class="formula-block">
+      <div class="formula-label">Standard Deviation &amp; Multi-Bet Scaling</div>
+      σ = √Var(X)<br/>
+      Var(n bets) = n · Var(single) &nbsp;→&nbsp; σ(n bets) = √n · σ(single)
+    </div>
+    <div class="card card-gold mt-3 mb-3">
+      <h3>Signal-to-Noise Ratio</h3>
+      <p class="mt-1">
+        Expected loss grows as <strong>n · |EV|</strong>; uncertainty grows only as <strong>√n</strong>.
+        The ratio |EV_total| / σ_total = √n · |EV|/σ → ∞.
+        The house's advantage becomes <em>increasingly certain</em> as volume increases.
+      </p>
+    </div>
+
+    <h3 class="mb-2">Dynamic Variance Explorer (Red / Black Bet)</h3>
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+      <div class="card">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="input-group">
+            <label>Number of Bets (n)</label>
+            <input type="range" id="var-n" min="1" max="10000" value="100" />
+            <span class="mono text-gold" id="var-n-label">100 bets</span>
+          </div>
+          <div class="input-group">
+            <label>Bet Size ($)</label>
+            <input type="number" id="var-bet" value="10" min="1" />
+          </div>
+          <div class="formula-block" id="var-formula-out" style="font-size:0.82rem;">
+            Var(total) = n × σ²_single
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="gap:1rem;">
+        <div class="result-box">
+          <div class="formula-label">Expected Total Loss</div>
+          <div class="result-value negative" id="var-ev">—</div>
+        </div>
+        <div class="result-box">
+          <div class="formula-label">Total Std Dev (±)</div>
+          <div class="result-value neutral" id="var-sd">—</div>
+        </div>
+        <div class="result-box">
+          <div class="formula-label">95% Confidence Range</div>
+          <div class="result-value" id="var-range" style="font-size:1rem; color:var(--blue);">—</div>
+        </div>
+        <div class="result-box">
+          <div class="formula-label">Signal / Noise (SNR)</div>
+          <div class="result-value neutral" id="var-snr">—</div>
+        </div>
+        <div class="result-box" style="grid-column:span 2;">
+          <div class="formula-label">P(Player Finishes Ahead)</div>
+          <div class="result-value" id="var-pahead">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- §4 Bet Taxonomy -->
+  <section class="section-sm fade-in">
+    <div class="tag">§4 — Bet Taxonomy</div>
+    <h2>All Roulette Bets: Probability &amp; EV</h2>
+    <div class="card" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Bet Type</th>
+            <th>Numbers</th>
+            <th>P(Win)</th>
+            <th>Payout</th>
+            <th>EV (per $1)</th>
+            <th>House Edge</th>
+          </tr>
+        </thead>
+        <tbody id="bet-table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer>
+  <div class="container">
+    <strong>Casino Probability Simulator</strong> — Applied Statistical Analysis Platform<br/>
+    <span style="margin-top:0.5rem; display:block;">For educational purposes only.</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/theory.js"></script>
+</body>
+</html>
