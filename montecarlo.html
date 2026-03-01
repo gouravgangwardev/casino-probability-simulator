@@ -1,1 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monte Carlo Simulation — Casino Probability Simulator</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
 
+<nav class="navbar">
+  <div class="nav-logo"><span>♠</span> Casino Prob. Simulator</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="theory.html">Theory</a></li>
+    <li><a href="simulator.html">Simulator</a></li>
+    <li><a href="montecarlo.html">Monte Carlo</a></li>
+    <li><a href="analysis.html">Analysis</a></li>
+    <li><a href="fallacy.html">Fallacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+
+  <div class="section text-center fade-in">
+    <div class="tag">Chapter IV</div>
+    <h1>Monte Carlo <span class="text-gold">Simulation</span></h1>
+    <p class="hero-subtitle">
+      Simulate 1,000 players each betting red 1,000 times.
+      The full distribution of outcomes reveals the statistical inevitability of house profit.
+    </p>
+  </div>
+
+  <!-- Theory Block -->
+  <section class="section-sm fade-in">
+    <div class="card card-gold">
+      <h3>What is a Monte Carlo Simulation?</h3>
+      <p class="mt-1">
+        Named after the famous Monaco casino, <strong>Monte Carlo methods</strong> use repeated
+        random sampling to obtain numerical results — empirically deriving probability distributions
+        rather than solving them analytically.
+      </p>
+      <p>
+        Here we run <strong>1,000 independent player simulations</strong>, each executing exactly
+        <strong>1,000 spins</strong> on red (P = 18/37, payout 1:1). The resulting distribution
+        of final balances is our empirical estimate of the true outcome distribution.
+      </p>
+      <div class="formula-block">
+        <div class="formula-label">Theoretical Predictions (default config: $1000 start · $10 bet · 1000 spins)</div>
+        E[Final Bankroll] = $1,000 + 1,000 × (−1/37 × $10) = $1,000 − $270.27 = $729.73<br/>
+        σ[Final Bankroll] = √1,000 × σ_single ≈ √1,000 × $9.9963 ≈ $316.23
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulation Controls -->
+  <section class="section-sm fade-in">
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+      <div class="card">
+        <h3 class="mb-2">Simulation Parameters</h3>
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="input-group">
+            <label>Number of Players</label>
+            <input type="range" id="mc-players" min="100" max="5000" value="1000" step="100" />
+            <span class="mono text-gold" id="mc-players-lbl">1000 players</span>
+          </div>
+          <div class="input-group">
+            <label>Spins per Player</label>
+            <input type="range" id="mc-spins" min="100" max="2000" value="1000" step="100" />
+            <span class="mono text-gold" id="mc-spins-lbl">1000 spins</span>
+          </div>
+          <div class="input-group">
+            <label>Starting Bankroll ($)</label>
+            <input type="number" id="mc-bankroll" value="1000" min="100" step="100" />
+          </div>
+          <div class="input-group">
+            <label>Bet Size ($)</label>
+            <input type="number" id="mc-bet" value="10" min="1" step="1" />
+          </div>
+          <button id="mc-run-btn" class="btn btn-gold full-width">⚡ Run Monte Carlo Simulation</button>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="tag">Theoretical Predictions (before simulation)</div>
+        <div class="grid-2" style="gap:1rem;">
+          <div class="result-box">
+            <div class="formula-label">Expected Final Bankroll</div>
+            <div class="result-value neutral" id="mc-theo-mean">—</div>
+          </div>
+          <div class="result-box">
+            <div class="formula-label">Theoretical σ</div>
+            <div class="result-value neutral" id="mc-theo-sd">—</div>
+          </div>
+          <div class="result-box">
+            <div class="formula-label">Expected Loss</div>
+            <div class="result-value negative" id="mc-theo-loss">—</div>
+          </div>
+          <div class="result-box">
+            <div class="formula-label">Ruin Rate (normal approx.)</div>
+            <div class="result-value negative" id="mc-theo-ruin">—</div>
+          </div>
+        </div>
+        <div class="card" style="background:var(--bg3);">
+          <p class="text-muted" style="font-size:0.9rem; font-style:italic;">
+            Theoretical ruin = P(final ≤ 0) estimated via normal approximation.
+            Actual rate may differ slightly due to path-dependent bankruptcy.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results Panel (hidden until run) -->
+  <div id="mc-results" style="display:none;">
+
+    <section class="section-sm fade-in">
+      <div class="tag">Simulation Results</div>
+      <h2>Empirical Outcome Statistics</h2>
+      <div class="grid-4 mt-2">
+        <div class="stat-card">
+          <div class="stat-label">Empirical Mean</div>
+          <div class="stat-value" id="mc-mean">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Median Final Balance</div>
+          <div class="stat-value" id="mc-median">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Std Deviation</div>
+          <div class="stat-value" id="mc-sd">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">% Bankrupt</div>
+          <div class="stat-value" id="mc-ruin" style="color:var(--red)">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">% Below Start</div>
+          <div class="stat-value" id="mc-below-start" style="color:var(--red)">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">% Above Start</div>
+          <div class="stat-value" id="mc-above-start" style="color:var(--green)">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Max Final Balance</div>
+          <div class="stat-value" id="mc-max" style="color:var(--green)">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Min Final Balance</div>
+          <div class="stat-value" id="mc-min" style="color:var(--red)">—</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-sm fade-in">
+      <h3 class="mb-2">Distribution of Final Bankrolls (Histogram)</h3>
+      <div class="chart-container" style="height:380px;">
+        <canvas id="mc-histogram"></canvas>
+      </div>
+      <p class="text-muted mt-2" style="font-size:0.88rem; font-style:italic; text-align:center;">
+        Green bars = above starting bankroll · Red bars = below.
+        The distribution is approximately normal (Central Limit Theorem), shifted strongly left.
+      </p>
+    </section>
+
+    <section class="section-sm fade-in">
+      <h3 class="mb-2">Sample Player Trajectories (20 random paths)</h3>
+      <div class="chart-container" style="height:360px;">
+        <canvas id="mc-paths-chart"></canvas>
+      </div>
+      <p class="text-muted mt-2" style="font-size:0.88rem; font-style:italic; text-align:center;">
+        Individual paths vary wildly due to variance — but the
+        <span style="color:var(--red)">mean path (red)</span> and
+        <span style="color:var(--gold)">theoretical EV (gold dashed)</span>
+        both descend steadily, confirming negative EV.
+      </p>
+    </section>
+
+    <section class="section-sm fade-in">
+      <div class="card card-gold">
+        <h3>Statistical Interpretation</h3>
+        <div id="mc-interpretation" style="margin-top:1rem;"></div>
+      </div>
+    </section>
+
+  </div><!-- end #mc-results -->
+
+</div>
+</div>
+
+<footer>
+  <div class="container">
+    <strong>Casino Probability Simulator</strong> — Applied Statistical Analysis Platform<br/>
+    <span style="margin-top:0.5rem; display:block;">For educational purposes only.</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/montecarlo.js"></script>
+</body>
+</html>
