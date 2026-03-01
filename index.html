@@ -1,1 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casino Probability Simulator — Applied Statistical Analysis</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<nav class="navbar">
+  <div class="nav-logo"><span>♠</span> Casino Prob. Simulator</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="theory.html">Theory</a></li>
+    <li><a href="simulator.html">Simulator</a></li>
+    <li><a href="montecarlo.html">Monte Carlo</a></li>
+    <li><a href="analysis.html">Analysis</a></li>
+    <li><a href="fallacy.html">Fallacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ══════════════════════ HERO ══════════════════════ -->
+  <section class="hero">
+    <div class="container">
+      <div class="tag">Academic Statistical Platform</div>
+      <h1>Casino Probability<br /><span class="text-gold">Simulator</span></h1>
+      <p class="hero-subtitle">
+        An applied mathematical exploration of probability theory, expected value,
+        variance, and Monte Carlo simulation through the lens of casino gambling.
+      </p>
+      <div class="flex flex-center gap-2 flex-wrap">
+        <a href="simulator.html" class="btn btn-gold">▶ Launch Simulator</a>
+        <a href="theory.html"    class="btn btn-outline">∑ Explore Theory</a>
+      </div>
+
+      <!-- Decorative roulette numbers -->
+      <div style="margin-top:3rem; display:flex; justify-content:center; gap:0.75rem; flex-wrap:wrap; opacity:0.35;">
+        <span style="color:#ef4444; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">32</span>
+        <span style="color:#94a3b8; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">15</span>
+        <span style="color:#ef4444; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">19</span>
+        <span style="color:#22c55e; font-family:'Playfair Display',serif; font-size:2rem; font-weight:900;">0</span>
+        <span style="color:#94a3b8; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">26</span>
+        <span style="color:#ef4444; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">3</span>
+        <span style="color:#94a3b8; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">28</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ STAT HIGHLIGHTS ══════════════════════ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="grid-3 fade-in">
+
+        <div class="stat-card">
+          <div class="stat-label">House Edge (European)</div>
+          <div class="stat-value">2.70%</div>
+          <p class="stat-desc">
+            For every $100 wagered, the casino expects to retain $2.70 on average — permanently and inexorably.
+          </p>
+          <div class="mt-2">
+            <div class="prob-bar-wrap">
+              <div class="prob-bar-label"><span>Player share</span><span>97.3%</span></div>
+              <div class="prob-bar"><div class="prob-bar-fill bar-green" style="width:97.3%"></div></div>
+            </div>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar-label"><span>House edge</span><span>2.7%</span></div>
+              <div class="prob-bar"><div class="prob-bar-fill bar-red" style="width:2.7%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Expected Value (Red bet)</div>
+          <div class="stat-value" style="color:#ef4444;">−$0.027</div>
+          <p class="stat-desc">
+            A $1 bet on red yields an expected value of −$0.027. Negative EV guarantees player losses long-term.
+          </p>
+          <div class="formula-block" style="margin-top:1rem; font-size:0.85rem;">
+            EV = (18/37)×$1 − (19/37)×$1<br/>
+            EV = −$0.0270…
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Law of Large Numbers</div>
+          <div class="stat-value">∞</div>
+          <p class="stat-desc">
+            As spins → ∞, experimental win-rate converges to 18/37 = 48.65%. The casino's edge is mathematically certain.
+          </p>
+          <div class="mt-2 text-center">
+            <span class="mono" style="font-size:0.9rem; color:var(--gold)">P̄ₙ → 18/37</span><br/>
+            <span style="font-size:0.8rem; color:var(--text-muted)">as n → ∞</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ INTRO TEXT ══════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="gap:3rem; align-items:start;">
+
+        <div class="fade-in">
+          <div class="tag">Probability in Gambling</div>
+          <h2>The Mathematics Behind Every Spin</h2>
+          <p>
+            Casino games are not games of chance in any meaningful philosophical sense — they are
+            <strong>precisely engineered probability engines</strong> designed to extract wealth
+            through the iron logic of mathematics. Every roulette spin, every hand of blackjack,
+            every pull of a slot machine is governed by fixed, immutable probability distributions
+            that guarantee the house profits in the long run.
+          </p>
+          <p>
+            This platform provides a rigorous, interactive exploration of the statistical
+            foundations underlying gambling: <strong>probability theory</strong>,
+            <strong>expected value</strong>, <strong>variance</strong>, and the
+            <strong>law of large numbers</strong>. Understanding these concepts transforms
+            gambling from a mystery into a transparent — and sobering — mathematical exercise.
+          </p>
+          <a href="theory.html" class="btn btn-outline mt-2">Read the Mathematical Foundation →</a>
+        </div>
+
+        <div class="fade-in">
+          <div class="card card-gold">
+            <div class="tag">European Roulette</div>
+            <h3>The Probability Space</h3>
+            <div style="margin:1.5rem 0;">
+              <div class="prob-bar-wrap">
+                <div class="prob-bar-label">
+                  <span>🔴 Red (18 numbers)</span>
+                  <span class="text-gold">18/37 = 48.65%</span>
+                </div>
+                <div class="prob-bar"><div class="prob-bar-fill bar-red" style="width:48.65%"></div></div>
+              </div>
+              <div class="prob-bar-wrap">
+                <div class="prob-bar-label">
+                  <span>⚫ Black (18 numbers)</span>
+                  <span class="text-gold">18/37 = 48.65%</span>
+                </div>
+                <div class="prob-bar"><div class="prob-bar-fill bar-black" style="width:48.65%"></div></div>
+              </div>
+              <div class="prob-bar-wrap">
+                <div class="prob-bar-label">
+                  <span>🟢 Green (0)</span>
+                  <span class="text-gold">1/37 = 2.70%</span>
+                </div>
+                <div class="prob-bar"><div class="prob-bar-fill bar-green" style="width:2.70%"></div></div>
+              </div>
+            </div>
+            <p class="text-muted" style="font-size:0.9rem; font-style:italic;">
+              Note how red + black = 97.3%, not 100%. That missing 2.7% is the
+              green zero — and the house's entire profit mechanism.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ PAGE OVERVIEW ══════════════════════ -->
+  <section class="section" style="background: var(--bg3); padding: 5rem 0;">
+    <div class="container">
+      <div class="text-center fade-in mb-3">
+        <div class="tag">Platform Overview</div>
+        <h2>Six Chapters of Statistical Analysis</h2>
+        <p class="text-muted" style="max-width:600px; margin:0.5rem auto 0;">
+          Navigate each module to build a complete understanding of probability in gambling.
+        </p>
+      </div>
+      <div class="grid-3 fade-in">
+        <a href="theory.html" style="text-decoration:none;">
+          <div class="card" style="height:100%; transition:transform .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">∑</div>
+            <h3 class="text-gold">Mathematical Foundation</h3>
+            <p class="text-muted" style="font-size:0.95rem; margin-top:0.5rem;">
+              Formal probability models, expected value formulas, variance, and standard deviation — with an interactive EV calculator.
+            </p>
+          </div>
+        </a>
+        <a href="simulator.html" style="text-decoration:none;">
+          <div class="card" style="height:100%; transition:transform .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">♠</div>
+            <h3 class="text-gold">Roulette Simulator</h3>
+            <p class="text-muted" style="font-size:0.95rem; margin-top:0.5rem;">
+              Live spin engine with bankroll tracking. Run 10 to 10,000 automated spins and watch the house edge emerge in real time.
+            </p>
+          </div>
+        </a>
+        <a href="montecarlo.html" style="text-decoration:none;">
+          <div class="card" style="height:100%; transition:transform .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">🎲</div>
+            <h3 class="text-gold">Monte Carlo Simulation</h3>
+            <p class="text-muted" style="font-size:0.95rem; margin-top:0.5rem;">
+              Simulate 1,000 players simultaneously. See the full distribution of final balances, ruin rates, and population statistics.
+            </p>
+          </div>
+        </a>
+        <a href="analysis.html" style="text-decoration:none;">
+          <div class="card" style="height:100%; transition:transform .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">📈</div>
+            <h3 class="text-gold">Convergence Analysis</h3>
+            <p class="text-muted" style="font-size:0.95rem; margin-top:0.5rem;">
+              Interactive Law of Large Numbers visualization. House edge comparison across all major casino games.
+            </p>
+          </div>
+        </a>
+        <a href="fallacy.html" style="text-decoration:none;">
+          <div class="card" style="height:100%; transition:transform .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">🎰</div>
+            <h3 class="text-gold">Gambler's Fallacy</h3>
+            <p class="text-muted" style="font-size:0.95rem; margin-top:0.5rem;">
+              The most dangerous cognitive bias in gambling — debunked interactively with streaks, independence proofs, and probability invariance.
+            </p>
+          </div>
+        </a>
+        <div class="card card-gold" style="height:100%;">
+          <div style="font-size:2rem; margin-bottom:0.75rem;">⚖️</div>
+          <h3 class="text-gold">The House Always Wins</h3>
+          <p class="text-muted" style="font-size:0.95rem; margin-top:0.5rem;">
+            Not luck. Not skill. Negative expected value, compounded across millions of bets, makes casino profit a <em>mathematical certainty</em>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ MATHEMATICAL CONCLUSION ══════════════════════ -->
+  <section class="section">
+    <div class="container">
+      <div class="fade-in" style="max-width:860px; margin:0 auto;">
+        <div class="tag">Mathematical Conclusion</div>
+        <h2>Why Casinos Are Guaranteed Long-Term Profit Machines</h2>
+
+        <div class="card card-gold" style="margin:2rem 0;">
+          <p>
+            The profitability of a casino is not a matter of luck, management skill, or favorable conditions —
+            it is a <strong>mathematical theorem</strong>. Three interlocking principles of probability theory
+            make casino profit not merely likely but <em>asymptotically certain</em>.
+          </p>
+
+          <h3 class="mt-3 mb-1">I. Negative Expected Value</h3>
+          <p>
+            Every standard casino bet carries a strictly <strong>negative expected value</strong> for the player.
+            In European roulette, a $1 red bet yields EV = (18/37)(+1) + (19/37)(−1) = −$0.02703.
+            This means that on average, each bet destroys 2.703 cents of player wealth. There is no betting
+            system, no pattern recognition, and no "hot streak" that can alter this figure — it is
+            a consequence of the fixed probability structure of the game.
+          </p>
+
+          <div class="formula-block">
+            EV(bet) = Σ P(xᵢ) · xᵢ = (18/37)(+1) + (19/37)(−1) = −1/37 ≈ −0.02703
+          </div>
+
+          <h3 class="mt-3 mb-1">II. The Law of Large Numbers</h3>
+          <p>
+            The Strong Law of Large Numbers (Kolmogorov, 1933) states that for independent, identically
+            distributed random variables X₁, X₂, … with finite mean μ:
+          </p>
+          <div class="formula-block">
+            P( lim<sub>n→∞</sub> (X₁ + X₂ + … + Xₙ)/n = μ ) = 1
+          </div>
+          <p>
+            Applied to gambling: as the number of bets n → ∞, the casino's per-bet profit converges
+            to exactly −EV = +$0.027 with <strong>probability 1</strong>. Short-term variance allows
+            individual players to win — but the casino's total take across all players and all bets
+            converges inexorably to the theoretical house edge. This is not a tendency; it is an
+            almost-sure event in the measure-theoretic sense.
+          </p>
+
+          <h3 class="mt-3 mb-1">III. Variance Favors the Casino at Scale</h3>
+          <p>
+            Individual outcomes have variance σ² ≈ 0.9993 for a red/black bet. A single player may
+            win over a session. But a casino processes <em>millions</em> of independent bets. By the
+            Central Limit Theorem, the casino's total revenue R over n bets is approximately normally
+            distributed:
+          </p>
+          <div class="formula-block">
+            R ~ Normal(n·|EV|, √n · σ)
+          </div>
+          <p>
+            As n grows, the mean grows linearly while the standard deviation grows only as √n.
+            The <strong>signal-to-noise ratio</strong> (mean / std. dev.) = √n · |EV| / σ → ∞.
+            For n = 1,000,000 bets at $1 each: expected profit = $27,027 ± $999.
+            The probability of the casino losing money approaches zero exponentially fast.
+          </p>
+
+          <h3 class="mt-3 mb-1">Conclusion</h3>
+          <p>
+            A casino is best understood not as a gambling establishment but as a
+            <strong>probability-harvesting machine</strong>. The green zero on the roulette wheel
+            is the mechanism; negative expected value is the product; and the law of large numbers
+            is the guarantee. No player strategy can overcome a negative-EV game in the long run —
+            because doing so would require violating the most fundamental theorems of probability
+            theory. The house does not merely tend to win. <em>Given sufficient volume, the house
+            must win.</em>
+          </p>
+        </div>
+
+        <p class="text-muted text-center italic" style="font-size:0.9rem;">
+          "The casino is not gambling. The casino is in the business of
+          selling unfavorable bets to people who enjoy taking them."
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .page-wrapper -->
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <div class="container">
+    <strong>Casino Probability Simulator</strong> — Applied Statistical Analysis Platform<br/>
+    <span style="margin-top:0.5rem; display:block;">
+      Built with pure HTML · CSS · JavaScript — No frameworks, no backend, no illusions.
+    </span>
+    <span style="margin-top:0.25rem; display:block; color:#475569;">
+      For educational purposes only. Gambling involves real financial risk.
+    </span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
