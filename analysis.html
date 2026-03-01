@@ -1,1 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Law of Large Numbers & House Edge — Casino Probability Simulator</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
 
+<nav class="navbar">
+  <div class="nav-logo"><span>♠</span> Casino Prob. Simulator</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="theory.html">Theory</a></li>
+    <li><a href="simulator.html">Simulator</a></li>
+    <li><a href="montecarlo.html">Monte Carlo</a></li>
+    <li><a href="analysis.html">Analysis</a></li>
+    <li><a href="fallacy.html">Fallacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+
+  <div class="section text-center fade-in">
+    <div class="tag">Chapter V</div>
+    <h1>Law of Large Numbers <br/><span class="text-gold">&amp; House Edge Analysis</span></h1>
+    <p class="hero-subtitle">
+      Watch experimental probability converge to its theoretical value —
+      and compare the house advantage across all major casino games.
+    </p>
+  </div>
+
+  <!-- ── §1 LLN ── -->
+  <section class="section-sm fade-in">
+    <div class="tag">§1 — Law of Large Numbers</div>
+    <h2>Convergence of Experimental Probability</h2>
+
+    <div class="card card-gold mb-3">
+      <h3>The Theorem</h3>
+      <p class="mt-1">
+        The <strong>Strong Law of Large Numbers</strong> (Kolmogorov) states that for i.i.d.
+        random variables X₁, X₂, … with E[X] = μ, the sample mean converges almost surely:
+      </p>
+      <div class="formula-block">
+        P( lim<sub>n→∞</sub> X̄ₙ = μ ) = 1<br/><br/>
+        In roulette terms: P( lim<sub>n→∞</sub> (wins / n) = 18/37 ) = 1
+      </div>
+      <p>
+        The graph below demonstrates this empirically. Observe how the experimental red
+        win-rate oscillates wildly at first, then converges tightly toward
+        <strong>18/37 ≈ 48.6486…%</strong> as n increases.
+      </p>
+    </div>
+
+    <!-- LLN Controls -->
+    <div class="card mb-3">
+      <div class="grid-2" style="gap:2rem; align-items:end;">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="input-group">
+            <label>Max Spins to Simulate</label>
+            <select id="lln-maxspins">
+              <option value="500">500 spins</option>
+              <option value="1000">1,000 spins</option>
+              <option value="5000" selected>5,000 spins</option>
+              <option value="10000">10,000 spins</option>
+              <option value="50000">50,000 spins</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Number of Simulation Runs (paths)</label>
+            <select id="lln-runs">
+              <option value="1">1 path</option>
+              <option value="3" selected>3 paths</option>
+              <option value="5">5 paths</option>
+              <option value="10">10 paths</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <button id="lln-run-btn" class="btn btn-gold full-width">▶ Simulate Convergence</button>
+          <button id="lln-clear-btn" class="btn btn-ghost full-width">↺ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-container" style="height:400px;">
+      <canvas id="lln-chart"></canvas>
+    </div>
+    <p class="text-muted mt-2" style="font-size:0.88rem; font-style:italic; text-align:center;">
+      The <span style="color:#facc15">gold dashed line</span> = theoretical P(red) = 18/37 = 48.6486%.
+      Each colored path = one simulated sequence. Early divergence gives way to tight convergence.
+    </p>
+
+    <!-- LLN Stats -->
+    <div id="lln-stats" class="grid-4 mt-3" style="display:none;">
+      <div class="result-box">
+        <div class="formula-label">Theoretical P(red)</div>
+        <div class="result-value neutral">48.6486%</div>
+      </div>
+      <div class="result-box">
+        <div class="formula-label">Avg Final Exp. Rate</div>
+        <div class="result-value neutral" id="lln-avg-final">—</div>
+      </div>
+      <div class="result-box">
+        <div class="formula-label">Absolute Deviation</div>
+        <div class="result-value neutral" id="lln-deviation">—</div>
+      </div>
+      <div class="result-box">
+        <div class="formula-label">Total Spins Run</div>
+        <div class="result-value neutral" id="lln-total">—</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── §2 HOUSE EDGE ── -->
+  <section class="section-sm fade-in">
+    <div class="tag">§2 — House Edge Comparison</div>
+    <h2>Casino Games: House Advantage</h2>
+    <p>
+      The <strong>house edge</strong> is the casino's long-run percentage advantage per bet —
+      the negative expected value expressed as a fraction of bet size.
+      Every dollar wagered is reduced by this percentage, permanently.
+    </p>
+
+    <div class="chart-container mt-3 mb-3" style="height:400px;">
+      <canvas id="edge-bar-chart"></canvas>
+    </div>
+
+    <div class="card" style="overflow-x:auto;">
+      <table class="data-table" id="edge-table">
+        <thead>
+          <tr>
+            <th>Game</th>
+            <th>House Edge</th>
+            <th>EV per $100 wagered</th>
+            <th>Bets to lose 50% (expected)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── §3 EROSION CALCULATOR ── -->
+  <section class="section-sm fade-in">
+    <div class="tag">§3 — Bankroll Erosion Calculator</div>
+    <h2>How Long Until You Lose?</h2>
+    <p>
+      Given a house edge <em>h</em>, bet size <em>b</em>, and starting bankroll <em>B₀</em>,
+      the expected number of bets until the bankroll is halved:
+    </p>
+    <div class="formula-block">
+      E[bets to 50% loss] = B₀ × 0.5 / (h × b)
+    </div>
+
+    <div class="grid-2 mt-3" style="gap:2rem; align-items:start;">
+      <div class="card">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="input-group">
+            <label>Select Game</label>
+            <select id="erosion-game">
+              <option value="0.027">European Roulette (2.70%)</option>
+              <option value="0.0526">American Roulette (5.26%)</option>
+              <option value="0.01">Blackjack — Basic Strategy (~1%)</option>
+              <option value="0.005">Blackjack — Perfect Strategy (0.5%)</option>
+              <option value="0.10">Slots — Average (10%)</option>
+              <option value="0.15">Slots — High (15%)</option>
+              <option value="0.0141">Baccarat — Banker (1.41%)</option>
+              <option value="0.024">Craps — Pass Line (2.4%)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Starting Bankroll ($)</label>
+            <input type="number" id="erosion-br" value="1000" min="100" />
+          </div>
+          <div class="input-group">
+            <label>Bet Size ($)</label>
+            <input type="number" id="erosion-bet" value="10" min="1" />
+          </div>
+          <div class="input-group">
+            <label>Bets per Hour</label>
+            <input type="number" id="erosion-bph" value="60" min="1" />
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="result-box">
+          <div class="formula-label">Expected Loss per Hour</div>
+          <div class="result-value negative" id="erosion-per-hour">—</div>
+        </div>
+        <div class="result-box">
+          <div class="formula-label">Expected Bets to Lose 50%</div>
+          <div class="result-value neutral" id="erosion-to50">—</div>
+        </div>
+        <div class="result-box">
+          <div class="formula-label">Expected Time to Lose 50%</div>
+          <div class="result-value neutral" id="erosion-time50">—</div>
+        </div>
+        <div class="result-box">
+          <div class="formula-label">House Retention Rate</div>
+          <div class="result-value negative" id="erosion-rate">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-container mt-3" style="height:340px;">
+      <canvas id="erosion-chart"></canvas>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer>
+  <div class="container">
+    <strong>Casino Probability Simulator</strong> — Applied Statistical Analysis Platform<br/>
+    <span style="margin-top:0.5rem; display:block;">For educational purposes only.</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/analysis.js"></script>
+</body>
+</html>
