@@ -1,1 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gambler's Fallacy — Casino Probability Simulator</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
 
+<nav class="navbar">
+  <div class="nav-logo"><span>♠</span> Casino Prob. Simulator</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="theory.html">Theory</a></li>
+    <li><a href="simulator.html">Simulator</a></li>
+    <li><a href="montecarlo.html">Monte Carlo</a></li>
+    <li><a href="analysis.html">Analysis</a></li>
+    <li><a href="fallacy.html">Fallacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+
+  <div class="section text-center fade-in">
+    <div class="tag">Chapter VI</div>
+    <h1>The Gambler's <span class="text-gold">Fallacy</span></h1>
+    <p class="hero-subtitle">
+      The most dangerous cognitive bias in gambling — the false belief that past outcomes
+      influence future independent events. Debunked here with mathematical precision.
+    </p>
+  </div>
+
+  <!-- Definition -->
+  <section class="section-sm fade-in">
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+      <div class="card card-gold">
+        <h3>What is the Gambler's Fallacy?</h3>
+        <p class="mt-1">
+          The <strong>Gambler's Fallacy</strong> (also known as the Monte Carlo Fallacy or
+          the Fallacy of the Maturity of Chances) is the erroneous belief that if a random
+          event has occurred more frequently than expected in the past, it is <em>less likely</em>
+          to occur in the future — or vice versa.
+        </p>
+        <p>
+          In roulette: after seeing 10 consecutive red results, many players believe
+          "black is due." This intuition is <strong>mathematically false</strong>.
+        </p>
+        <div class="formula-block mt-2">
+          P(black | last 10 were red) = P(black) = 18/37<br/>
+          ≈ 48.6486%<br/><br/>
+          The wheel has no memory.
+        </div>
+      </div>
+      <div class="card">
+        <h3>Why the Intuition Fails</h3>
+        <p class="mt-1">The fallacy conflates two different probability statements:</p>
+        <div style="margin:1rem 0; display:flex; flex-direction:column; gap:1rem;">
+          <div style="background:var(--bg3); border-left:4px solid var(--green); padding:1rem; border-radius:0 8px 8px 0;">
+            <div class="formula-label">TRUE (before any spins)</div>
+            P(10 reds in a row) = (18/37)¹⁰ ≈ 0.000649<br/>
+            <span class="text-muted" style="font-size:0.88rem;">Very unlikely — for a fresh sequence.</span>
+          </div>
+          <div style="background:var(--bg3); border-left:4px solid var(--red); padding:1rem; border-radius:0 8px 8px 0;">
+            <div class="formula-label">FALSE belief (after 9 reds have already occurred)</div>
+            P(10th red | 9 reds already) ≠ very small<br/>
+            <span style="color:var(--gold); font-family:var(--font-mono); font-size:0.85rem;">= P(red) = 18/37 ≈ 48.65%</span>
+          </div>
+        </div>
+        <p class="text-muted" style="font-size:0.9rem;">
+          Once 9 reds have occurred, they are fixed history.
+          The conditional probability given them equals the unconditional probability.
+          This is the formal definition of statistical independence.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Demo -->
+  <section class="section-sm fade-in">
+    <div class="tag">Interactive Demonstration</div>
+    <h2>The Streak Challenge</h2>
+    <p>
+      Generate a streak of red results. Then ask yourself: what is the probability of black
+      on the next spin? Guess — then reveal the answer.
+    </p>
+
+    <div class="card mb-3">
+      <!-- Controls -->
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:1.5rem;">
+        <div class="input-group" style="flex:0 0 auto; min-width:180px;">
+          <label>Streak Length</label>
+          <select id="streak-len">
+            <option value="3">3 consecutive reds</option>
+            <option value="5" selected>5 consecutive reds</option>
+            <option value="7">7 consecutive reds</option>
+            <option value="10">10 consecutive reds</option>
+            <option value="15">15 consecutive reds</option>
+            <option value="20">20 consecutive reds</option>
+          </select>
+        </div>
+        <button id="streak-gen-btn" class="btn btn-gold">🎲 Generate Streak</button>
+        <button id="reveal-btn" class="btn btn-ghost" disabled>👁 Reveal Answer</button>
+      </div>
+
+      <!-- Streak display -->
+      <div id="streak-display"
+           style="min-height:80px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:0.6rem;">
+        <p class="text-muted italic" style="font-size:0.95rem;">Click "Generate Streak" to begin.</p>
+      </div>
+
+      <!-- Question -->
+      <div id="streak-question" style="display:none; margin-top:1.5rem; text-align:center;">
+        <p style="font-size:1.15rem; font-family:var(--font-display); line-height:1.5;">
+          After seeing <span id="q-n" class="text-gold">?</span> consecutive
+          <span style="color:#ef4444; font-weight:700;">RED</span> results,<br/>
+          what is P(<strong style="color:#94a3b8;">BLACK</strong>) on the next spin?
+        </p>
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; margin-top:1.25rem;">
+          <button class="btn btn-ghost" data-guess="higher">
+            📈 Higher than 48.65% — "black is due"
+          </button>
+          <button class="btn btn-ghost" data-guess="lower">
+            📉 Lower than 48.65% — "red is hot"
+          </button>
+          <button class="btn btn-ghost" data-guess="same">
+            ⚖️ Exactly 18/37 — unchanged
+          </button>
+        </div>
+      </div>
+
+      <!-- Answer reveal -->
+      <div id="streak-answer" style="display:none; margin-top:1.5rem;">
+        <div class="card" id="answer-card" style="text-align:center; transition:border-color .3s, box-shadow .3s;">
+          <div id="answer-icon" style="font-size:2.2rem; margin-bottom:0.5rem;"></div>
+          <h3 id="answer-title"></h3>
+          <p id="answer-text" class="mt-2" style="max-width:640px; margin-left:auto; margin-right:auto;"></p>
+          <div class="formula-block mt-2" id="answer-formula" style="text-align:left; display:inline-block;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formal Proof -->
+    <div class="card card-gold fade-in">
+      <h3>Formal Proof: Independence of Roulette Spins</h3>
+      <p class="mt-1">Two events A and B are <strong>statistically independent</strong> if and only if:</p>
+      <div class="formula-block">P(A ∩ B) = P(A) · P(B) &nbsp;↔&nbsp; P(A | B) = P(A)</div>
+      <p>For roulette spins S₁, S₂, S₃, … each spin is drawn from the same uniform distribution
+         over {0, 1, …, 36} with replacement. The wheel and ball are reset identically each spin:</p>
+      <div class="formula-block">
+        P(Sₙ₊₁ = red | S₁ = r₁, …, Sₙ = rₙ)<br/>
+        = P(Sₙ₊₁ = red)<br/>
+        = 18/37 ≈ 0.48649…<br/><br/>
+        ∀ r₁, …, rₙ ∈ {0,…,36}, ∀ n ∈ ℕ
+      </div>
+      <p class="text-muted" style="font-size:0.9rem; font-style:italic;">
+        This follows directly from the memoryless property of i.i.d. random variables.
+        The physical system has no state memory between spins.
+        Past outcomes carry zero information about future outcomes.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Streak Frequency -->
+  <section class="section-sm fade-in">
+    <div class="tag">Streak Analysis</div>
+    <h2>Streak Frequency Distribution</h2>
+    <p>
+      Long streaks occur exactly as often as probability predicts — neither more nor less.
+      Simulate thousands of spins and compare observed streak frequencies to theoretical predictions.
+    </p>
+
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:1.5rem;">
+      <div class="input-group" style="flex:0 0 auto;">
+        <label>Spins to simulate</label>
+        <select id="streak-sim-n">
+          <option value="1000">1,000 spins</option>
+          <option value="5000">5,000 spins</option>
+          <option value="10000" selected>10,000 spins</option>
+          <option value="50000">50,000 spins</option>
+          <option value="100000">100,000 spins</option>
+        </select>
+      </div>
+      <button id="streak-sim-btn" class="btn btn-gold">⚡ Analyze Streaks</button>
+    </div>
+
+    <div class="grid-2" style="gap:2rem;">
+      <div>
+        <div class="chart-container" style="height:340px;">
+          <canvas id="streak-chart"></canvas>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="formula-label mb-1">Observed vs Theoretical Streak Counts</div>
+          <p class="text-muted" style="font-size:0.88rem; margin-bottom:1rem;">
+            Theoretical: P(isolated run of k reds) = (19/37) × (18/37)ᵏ × (19/37)
+          </p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Streak of k reds</th>
+                <th>Theoretical P</th>
+                <th>Expected (/10k spins)</th>
+                <th>Observed</th>
+              </tr>
+            </thead>
+            <tbody id="streak-freq-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Historical Context -->
+  <section class="section-sm fade-in">
+    <div class="tag">Historical Context</div>
+    <h2>The Monte Carlo Incident, 1913</h2>
+    <div class="card">
+      <p>
+        On August 18, 1913, at the Casino de Monte-Carlo, the roulette ball fell on black an
+        extraordinary <strong>26 consecutive times</strong>. As the streak continued, gamblers
+        lost <strong>millions of francs</strong> betting on red, convinced that "red must be due."
+      </p>
+      <p>
+        This event — which gave the Gambler's Fallacy its alternative name, the
+        <em>Monte Carlo Fallacy</em> — is the most famous real-world demonstration of the bias.
+      </p>
+      <div class="formula-block mt-2">
+        P(26 consecutive blacks from scratch) = (18/37)²⁶ ≈ 0.00000033 (1 in 3,000,000)<br/>
+        P(black on 27th spin | 26 already occurred) = 18/37 ≈ 48.65%<br/><br/>
+        The streak was extraordinary. The 27th spin outcome was entirely ordinary.
+      </div>
+      <p class="text-muted mt-2" style="font-style:italic; font-size:0.9rem;">
+        With millions of roulette spins globally per year, even one-in-a-million events are
+        routine. Remarkable streaks do not signal impending corrections — they are simply
+        the inevitable tail events of any sufficiently long sequence of independent trials.
+        Once they have occurred, they carry no information about what comes next.
+      </p>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer>
+  <div class="container">
+    <strong>Casino Probability Simulator</strong> — Applied Statistical Analysis Platform<br/>
+    <span style="margin-top:0.5rem; display:block;">For educational purposes only.</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/fallacy.js"></script>
+</body>
+</html>
