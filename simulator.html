@@ -1,1 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roulette Simulator — Casino Probability Simulator</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
 
+<nav class="navbar">
+  <div class="nav-logo"><span>♠</span> Casino Prob. Simulator</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="theory.html">Theory</a></li>
+    <li><a href="simulator.html">Simulator</a></li>
+    <li><a href="montecarlo.html">Monte Carlo</a></li>
+    <li><a href="analysis.html">Analysis</a></li>
+    <li><a href="fallacy.html">Fallacy</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+
+  <div class="section text-center fade-in">
+    <div class="tag">Chapter III</div>
+    <h1>Roulette <span class="text-gold">Simulator</span></h1>
+    <p class="hero-subtitle">
+      Live simulation engine with bankroll tracking. Observe how probability
+      theory manifests in real spin sequences over time.
+    </p>
+  </div>
+
+  <!-- Controls & Bet Setup -->
+  <section class="section-sm fade-in">
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+
+      <div class="card">
+        <h3 class="mb-2">Bet Configuration</h3>
+        <div style="display:flex; flex-direction:column; gap:1.1rem;">
+          <div class="input-group">
+            <label>Bet Type</label>
+            <select id="sim-bet-type">
+              <option value="red">🔴 Red (pays 1:1 · P = 18/37)</option>
+              <option value="black">⚫ Black (pays 1:1 · P = 18/37)</option>
+              <option value="number">🎯 Single Number (pays 35:1 · P = 1/37)</option>
+            </select>
+          </div>
+          <div class="input-group" id="number-pick-group" style="display:none;">
+            <label>Pick a Number (0 – 36)</label>
+            <input type="number" id="sim-number" value="7" min="0" max="36" />
+          </div>
+          <div class="input-group">
+            <label>Bet Size ($)</label>
+            <input type="number" id="sim-bet-size" value="10" min="1" step="1" />
+          </div>
+          <div class="input-group">
+            <label>Starting Bankroll ($)</label>
+            <input type="number" id="sim-bankroll-start" value="1000" min="10" step="10" />
+          </div>
+          <button class="btn btn-gold full-width" id="reset-btn">↺ Reset Simulator</button>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="card" style="text-align:center;" id="spin-result-card">
+          <div class="formula-label" style="margin-bottom:0.5rem;">Current Bankroll</div>
+          <div class="bankroll-display" id="sim-bankroll-display">$1,000.00</div>
+          <div id="sim-pnl" style="font-family:var(--font-mono); font-size:0.9rem; color:var(--text-muted);">P&L: $0.00</div>
+        </div>
+
+        <div class="card" style="text-align:center;">
+          <div class="formula-label">Last Spin Result</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:1rem; margin-top:0.75rem;">
+            <div class="roulette-pocket" id="spin-pocket" style="background:#1e293b; border-color:#334155; width:60px; height:60px; font-size:1.4rem;">—</div>
+            <div>
+              <div class="mono text-muted" style="font-size:0.8rem;" id="spin-color-label">—</div>
+              <div class="mono" id="spin-outcome-label" style="font-size:0.9rem;">Awaiting spin…</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <button class="btn btn-gold" id="btn-spin1">▶ Spin Once</button>
+          <button class="btn btn-outline" id="btn-spin10">×10 Spins</button>
+          <button class="btn btn-outline" id="btn-spin100">×100 Spins</button>
+          <button class="btn btn-outline" id="btn-spin1000">×1,000 Spins</button>
+        </div>
+        <button class="btn btn-ghost full-width" id="btn-spin10k">⚡ 10,000 Spins (Auto)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Session Stats -->
+  <section class="section-sm fade-in">
+    <h3 class="mb-2">Session Statistics</h3>
+    <div class="grid-4">
+      <div class="result-box">
+        <div class="formula-label">Total Spins</div>
+        <div class="result-value neutral" id="stat-spins">0</div>
+      </div>
+      <div class="result-box">
+        <div class="formula-label">Wins</div>
+        <div class="result-value positive" id="stat-wins">0</div>
+      </div>
+      <div class="result-box">
+        <div class="formula-label">Losses</div>
+        <div class="result-value negative" id="stat-losses">0</div>
+      </div>
+      <div class="result-box">
+        <div class="formula-label">Win Rate</div>
+        <div class="result-value neutral" id="stat-winrate">0.000%</div>
+      </div>
+    </div>
+
+    <div class="grid-2 mt-2">
+      <div class="card">
+        <div class="formula-label mb-1">Theoretical vs Experimental Probability</div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Theoretical Win Rate</span>
+            <span class="mono" id="theo-prob">48.649%</span>
+          </div>
+          <div class="prob-bar">
+            <div class="prob-bar-fill bar-gold" id="theo-bar" style="width:48.649%"></div>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Experimental Win Rate</span>
+            <span class="mono" id="exp-prob">0.000%</span>
+          </div>
+          <div class="prob-bar">
+            <div class="prob-bar-fill bar-green" id="exp-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Deviation from Theoretical</span>
+            <span class="mono" id="prob-deviation">—</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="formula-label mb-1">Expected vs Actual P&amp;L</div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Theoretical Total EV</span>
+            <span class="mono text-red" id="theo-ev">$0.00</span>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Actual P&amp;L</span>
+            <span class="mono" id="actual-pnl">$0.00</span>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Session High</span>
+            <span class="mono text-green" id="stat-max">—</span>
+          </div>
+        </div>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar-label">
+            <span>Session Low</span>
+            <span class="mono text-red" id="stat-min">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bankroll Chart -->
+  <section class="section-sm fade-in">
+    <h3 class="mb-2">Bankroll Over Time</h3>
+    <div class="chart-container" style="height:360px;">
+      <canvas id="bankroll-chart"></canvas>
+    </div>
+    <p class="text-muted mt-2" style="font-size:0.88rem; font-style:italic; text-align:center;">
+      The <span style="color:#ef4444;">red dashed line</span> = theoretical expected bankroll trajectory.
+      Individual paths vary due to variance — but the long-run trend is always downward.
+    </p>
+  </section>
+
+  <!-- Spin History Log -->
+  <section class="section-sm fade-in">
+    <h3 class="mb-2">Recent Spin History (last 20)</h3>
+    <div class="card" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Number</th><th>Color</th><th>Result</th><th>P&amp;L</th><th>Bankroll</th>
+          </tr>
+        </thead>
+        <tbody id="spin-log"></tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer>
+  <div class="container">
+    <strong>Casino Probability Simulator</strong> — Applied Statistical Analysis Platform<br/>
+    <span style="margin-top:0.5rem; display:block;">For educational purposes only.</span>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script src="js/simulator.js"></script>
+<script>
+  // Wire buttons after modules load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-spin1').addEventListener('click',    () => Simulator.spin(1));
+    document.getElementById('btn-spin10').addEventListener('click',   () => Simulator.spin(10));
+    document.getElementById('btn-spin100').addEventListener('click',  () => Simulator.spin(100));
+    document.getElementById('btn-spin1000').addEventListener('click', () => Simulator.spin(1000));
+    document.getElementById('btn-spin10k').addEventListener('click',  () => Simulator.spin(10000));
+    document.getElementById('reset-btn').addEventListener('click',    () => Simulator.reset());
+  });
+</script>
+</body>
+</html>
